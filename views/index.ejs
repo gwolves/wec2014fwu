@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html>
+<% layout('layout') -%>
+<div id='wrapper'>
+  <div id='msgbox'>
+    <span class='msg'>Message Box</span>
+  </div>
+  <div id='formWrapper'>
+    <form id='loginForm'>
+      <fieldset>
+        <label for='username'>Username:</label>
+        <input type='text' name='username' />
+        <label for='password'>Password:</label>
+        <input type='password' name='password' />
+        <input type='button' id='loginButton' value='login' />
+        <input type='button' id='signupButton' value='Add User' />
+      </fieldset>
+    </form>
+  </div>
+</div>
