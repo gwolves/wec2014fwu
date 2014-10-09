@@ -9,12 +9,21 @@ var userSchema = new Schema({
   count: {type: Number, default: 0}
 });
 
+userSchema.path('username').validate(function(v) {
+  return 5 <= v.length && v.length <= 20;
+}, "username length");
+
+userSchema.path('password').validate(function(v) {
+  return 8 <= v.length && v.length <= 20;
+}, "password length");
+
 userSchema.method('authenticate', function(password) {
   return password === this.password;
 });
 
 userSchema.method('incCount', function() {
-  this.count = this.count + 1;
+  this.count++;
+  this.save();
 });
 
 var userModel = mongoose.model('user', userSchema);
