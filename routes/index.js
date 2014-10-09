@@ -24,12 +24,23 @@ router.post('/signup', function(req, res) {
     password: post.password
   }, function (err, newbie) {
     if (err) {
+      if (err.name === "ValidationError") {
+        if (err.errors.username && err.errors.username.message === "username length") {
+          res.json({error_code: -1});
+        } else if (err.errors.password && err.errors.password.message === "password length") {
+          res.json({error_code: -2});
+        }
+      } else if (err.name === "MongoError" && err.code === 11000) {
+        res.json({error_code: -3});
+      }
       console.error(err);
     } else {
-      console.log("user created");
+      console.log('user created');
+      req.session.username = newbie.username;
+      newbie.incCount();
       res.json({
-        username: newbie.username,
-        login_count: count
+        user_name: newbie.username,
+        login_count: newbie.count
       });
     }
   });
@@ -37,17 +48,34 @@ router.post('/signup', function(req, res) {
 
 router.post('/login', function(req, res) {
   var post = req.body;
-  user.find({username: post.username}, function (err, docs) {
-    console.log(docs);
+  user.findOne({username: post.username}, 'username count', function (err, doc) {
+    if (err) {
+      console.error(err);
+    } else {
+      if (doc === null || !doc.authenticate(post.password)) {
+        res.json({error_code: -4});
+      } else {
+        req.session.username = doc.username;
+        console.log(doc.count);
+        doc.incCount();
+        console.log(doc.count);
+        res.json({
+          user_name: doc.username,
+          login_count: doc.count
+        });
+      }
+      console.log(doc);
+    }
   });
-  res.end('login');
 });
 
 router.post('/clearData', function(req, res) {
   user.remove({}, function (err) {
-    console.error(err);
+    if (err) {
+      console.error(err);
+    }
+    res.end();
   });
-  //res.end('clear');
 });
 
 /* Aux API list */
@@ -55,6 +83,5 @@ router.post('/logout', function(req, res) {
   delete req.session.username;
   res.redirect('/login');
 });
-
 
 module.exports = router;
