@@ -18,7 +18,7 @@ userSchema.path('password').validate(function(v) {
 }, "password length");
 
 userSchema.method('authenticate', function(password) {
-  return password === this.password;
+  return password == this.password;
 });
 
 userSchema.method('incCount', function() {
