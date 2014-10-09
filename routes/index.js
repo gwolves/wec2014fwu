@@ -15,6 +15,10 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/welcome', function(req, res) {
+  res.render('welcome', { title: 'Express', username: 'gwolves', count: 20 });
+});
+
 /* Public API list */
 router.post('/signup', function(req, res) {
   post = req.body;
@@ -48,7 +52,7 @@ router.post('/signup', function(req, res) {
 
 router.post('/login', function(req, res) {
   var post = req.body;
-  user.findOne({username: post.username}, 'username count', function (err, doc) {
+  user.findOne({username: post.username}, function (err, doc) {
     if (err) {
       console.error(err);
     } else {
@@ -56,9 +60,7 @@ router.post('/login', function(req, res) {
         res.json({error_code: -4});
       } else {
         req.session.username = doc.username;
-        console.log(doc.count);
         doc.incCount();
-        console.log(doc.count);
         res.json({
           user_name: doc.username,
           login_count: doc.count
@@ -81,7 +83,7 @@ router.post('/clearData', function(req, res) {
 /* Aux API list */
 router.post('/logout', function(req, res) {
   delete req.session.username;
-  res.redirect('/login');
+  res.redirect('/');
 });
 
 module.exports = router;
