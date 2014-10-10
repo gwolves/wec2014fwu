@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 mongoose.connect('mongodb://localhost/gwolves');
 
 var userSchema = new Schema({
-  username: {type: String, unique: true},
+  username: {type: String, require: true, unique: true},
   password: String,
   count: {type: Number, default: 0}
 });

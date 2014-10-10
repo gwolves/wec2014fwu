@@ -12,11 +12,22 @@ function checkAuth(req, res, next) {
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Main' });
 });
 
 router.get('/welcome', function(req, res) {
-  res.render('welcome', { title: 'Express', username: 'gwolves', count: 20 });
+  if (!req.session.username) {
+    res.redirect('/');
+  } else {
+    user.findOne({username: req.session.username}, function(err, doc) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(doc);
+        res.render('welcome', { title: 'Welcome', username: doc.username, count: doc.count });
+      }
+    });
+  }
 });
 
 /* Public API list */

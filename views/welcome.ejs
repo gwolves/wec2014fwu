@@ -1,9 +1,10 @@
 <% layout('layout') -%>
+<% script('/javascripts/welcome.js') -%>
 
 <div id='wrapper'>
   <div id='msgbox'>
-    <span class='msg'>Welcome <% username %></span>
-    <span class='msg'>You have logged in <% count %> times.</span>
+    <span class='msg'>Welcome <%= username %>
+    You have logged in <%= count %> times.</span>
   </div>
-  <button>Logout</button>
+  <button id='logoutButton'>Logout</button>
 </div>
